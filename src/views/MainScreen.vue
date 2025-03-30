@@ -81,4 +81,13 @@ export default {
   flex-direction: column;
   gap: 15px;
 }
+
+.timer-display {
+  background-color: #f0f8ff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 16px;
+  margin: 5px 0;
+}
 </style>
