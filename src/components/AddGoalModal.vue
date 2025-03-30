@@ -1,28 +1,31 @@
 <template>
   <div class="modal-overlay" @click.self="close">
     <div class="modal">
-      <h2>Создать новую цель</h2>
+      <h2>Добавить цель</h2>
 
       <form @submit.prevent="handleSubmit">
-        <div class="form-group">
-          <label>Название цели:</label>
-          <input v-model="title" type="text" required>
-        </div>
+        <div class="add-goal-form-inputs">
+          <div class="form-group">
+            <label></label>
+            <input v-model="title" type="text" placeholder="Название цели" required>
+          </div>
 
-        <div class="form-group">
-          <label>Количество часов:</label>
-          <input v-model.number="targetHours" type="number" min="1" required>
-        </div>
+          <div class="form-group">
+            <label></label>
+            <input v-model.number="targetHours" type="number" min="1" placeholder="Часы" required>
+          </div>
 
-        <div class="form-group">
-          <label>Дедлайн:</label>
-          <input v-model="deadline" type="date" required>
+          <div class="form-group">
+            <label></label>
+            <input v-model="deadline" type="date" placeholder="Дата" required>
+          </div>
         </div>
 
         <div class="modal-actions">
-          <button type="button" @click="close">Отмена</button>
-          <button type="submit" :disabled="!isFormValid">Создать цель</button>
+          <button class="white-button" type="submit" :disabled="!isFormValid">Добавить</button>
+          <button class="underline-button" type="button" @click="close">отмена</button>
         </div>
+
       </form>
     </div>
   </div>
@@ -63,6 +66,11 @@ export default {
 </script>
 
 <style>
+
+.add-goal-form-inputs{
+  margin-bottom: 16px;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -76,20 +84,10 @@ export default {
 }
 
 .modal {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-  max-width: 90%;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
+  background: #151515;
+  padding: 30px;
+  border-radius: 15px;
+  width: 460px;
 }
 
 .form-group input {
@@ -100,25 +98,14 @@ export default {
 
 .modal-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.modal-actions button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  justify-content: space-between;
 }
 
 .modal-actions button[type="submit"] {
-  background-color: #42b983;
-  color: white;
+  color: #dadada 0,5;
 }
 
 .modal-actions button[type="submit"]:disabled {
-  background-color: #ccc;
   cursor: not-allowed;
 }
 </style>

@@ -1,15 +1,20 @@
 <template>
   <div class="app">
     <h1>Мои цели</h1>
-    <button @click="showModal = true" class="add-button">+</button>
-
-    <div class="goals-list">
-      <GoalItem
-          v-for="goal in goals"
-          :key="goal.id"
-          :goal="goal"
-          @update-progress="updateGoalProgress"
-      />
+    <div class="cards-list">
+        <div class="goals-list">
+            <div class="card-add">
+              <div class="add-goal">
+                <button @click="showModal = true" class="add-button"><img src="../assets/images/add-button.png" alt="add-goal "></button>
+              </div>
+            </div>
+            <GoalItem
+                v-for="goal in goals"
+                :key="goal.id"
+                :goal="goal"
+                @update-progress="updateGoalProgress"
+            />
+        </div>
     </div>
 
     <AddGoalModal
@@ -65,29 +70,45 @@ export default {
 </script>
 
 <style>
-.add-button {
-  font-size: 24px;
-  padding: 5px 15px;
-  border-radius: 50%;
-  background-color: #42b983;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+  h1 {
+    font-size: 20px;
+  }
 
-.goals-list {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+  .card-add{
+    width: 460px;
+    height: 150px;
+    padding: 30px;
+    border-radius: 15px;
+    background: #151515;
+  }
 
-.timer-display {
-  background-color: #f0f8ff;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 16px;
-  margin: 5px 0;
-}
+  .add-goal{
+    display: flex;
+    justify-content: center;
+  }
+
+  .goal-item{
+    width: 460px;
+    padding: 30px;
+    border-radius: 15px;
+    background: #151515;
+  }
+
+  .goals-list{
+    max-width: 1420px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+
+  }
+
+  .cards-list{
+    max-width: 1420px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
 </style>

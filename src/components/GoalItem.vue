@@ -2,24 +2,41 @@
   <div class="goal-item">
     <div class="goal-header">
       <h3>{{ goal.title }}</h3>
-      <span>Дедлайн: {{ formattedDeadline }}</span>
+    </div>
+
+    <div class="goal-info">
+      <span>Цель: {{goal.targetHours}}ч.</span>
+      <span>{{ formattedDeadline }}</span>
     </div>
 
     <div class="progress-container">
       <div class="progress-bar" :style="{ width: progressPercentage + '%' }"></div>
       <span class="progress-text">{{ goal.completedHours.toFixed(1) }} / {{ goal.targetHours }} часов</span>
+
+    </div>
+
+    <div class="play-stop-button">
+      <button
+          @click="toggleTimer"
+          :class="{ 'timer-button': true, 'active': goal.isTimerRunning }"
+      >
+
+      <img
+          v-if="goal.isTimerRunning"
+          src="../assets/images/stop-button.png"
+          alt="stop"
+          class="stop-icon"
+      >
+      <img
+          v-else
+          src="../assets/images/play-button.png"
+          alt="play"
+      >    </button>
     </div>
 
     <div v-if="goal.isTimerRunning" class="timer-display">
-      ⏱️ Таймер: {{ formattedElapsedTime }}
+    Время: {{ formattedElapsedTime }}
     </div>
-
-    <button
-        @click="toggleTimer"
-        :class="{ 'timer-button': true, 'active': goal.isTimerRunning }"
-    >
-      {{ goal.isTimerRunning ? '⏸️ Остановить' : '⏱️ Начать отсчёт' }}
-    </button>
   </div>
 </template>
 
@@ -93,24 +110,41 @@ export default {
 </script>
 
 <style>
-.goal-item {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  position: relative;
+.stop-icon{
+  margin-bottom: 16px;
+}
+
+.timer-display{
+  display: flex;
+  justify-content: center;
+  color: rgba(218,218,218, 0.5);
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.play-stop-button{
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .goal-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 32px;
+}
+
+.goal-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 32px;
 }
 
 .progress-container {
-  height: 20px;
-  background-color: #f0f0f0;
+  height: 8px;
+  background-color: #252525;
   border-radius: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 32px;
   position: relative;
 }
 
@@ -127,29 +161,14 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 12px;
-  color: #333;
+  color: rgba(218,218,218, 0.5);
 }
 
 .timer-button {
-  background-color: #42b983;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
-}
-
-.timer-button.active {
-  background-color: #f44336;
-}
-
-.timer-display {
-  background-color: #f8f8f8;
-  padding: 5px 10px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  display: inline-block;
-  font-size: 14px;
 }
 </style>
