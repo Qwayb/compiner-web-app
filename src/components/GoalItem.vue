@@ -137,8 +137,16 @@ export default {
       clearInterval(this.timerInterval)
     },
     confirmDelete() {
-      this.$emit('delete-goal', this.goal.id)
-      this.showDeleteModal = false
+      this.$emit('delete-goal', this.goal.id);
+      this.showDeleteModal = false;
+      this.saveGoalsToLocalStorage(); // Добавляем сохранение после удаления
+    },
+
+    // Новый метод для сохранения целей
+    saveGoalsToLocalStorage() {
+      if (this.$parent.goals) {
+        localStorage.setItem('userGoals', JSON.stringify(this.$parent.goals));
+      }
     }
   },
   beforeUnmount() {

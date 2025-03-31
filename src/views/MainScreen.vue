@@ -35,40 +35,45 @@ export default {
   data() {
     return {
       showModal: false,
-      goals: [
-        // Пример цели
-        {
-          id: 1,
-          title: 'Изучение Vue.js',
-          targetHours: 10,
-          completedHours: 3,
-          deadline: '2023-12-31',
-          isTimerRunning: false
-        }
-      ]
+      goals: this.loadGoalsFromLocalStorage()
     }
   },
   methods: {
     createNewGoal(newGoal) {
       this.goals.push({
-        id: Date.now(), // Простой способ получить уникальный ID
+        id: Date.now(),
         title: newGoal.title,
         targetHours: newGoal.targetHours,
         completedHours: 0,
         deadline: newGoal.deadline,
         isTimerRunning: false
-      })
-      this.showModal = false
+      });
+      this.showModal = false;
+      this.saveGoalsToLocalStorage(); // Сохраняем после создания
     },
+
     updateGoalProgress({ id, hours }) {
-      const goal = this.goals.find(g => g.id === id)
+      const goal = this.goals.find(g => g.id === id);
       if (goal) {
-        goal.completedHours += hours
+        goal.completedHours += hours;
+        this.saveGoalsToLocalStorage(); // Сохраняем после обновления
       }
     },
+
     deleteGoal(goalId) {
-      this.goals = this.goals.filter(goal => goal.id !== goalId)
+      this.goals = this.goals.filter(goal => goal.id !== goalId);
+      this.saveGoalsToLocalStorage(); // Сохраняем после удаления
     },
+
+    // Новые методы для работы с LocalStorage
+    loadGoalsFromLocalStorage() {
+      const saved = localStorage.getItem('userGoals');
+      return saved ? JSON.parse(saved) : null;
+    },
+
+    saveGoalsToLocalStorage() {
+      localStorage.setItem('userGoals', JSON.stringify(this.goals));
+    }
   }
 }
 </script>
