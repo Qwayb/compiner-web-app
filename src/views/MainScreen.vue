@@ -8,12 +8,13 @@
                 <button @click="showModal = true" class="add-button"><img src="../assets/images/add-button.png" alt="add-goal "></button>
               </div>
             </div>
-            <GoalItem
-                v-for="goal in goals"
-                :key="goal.id"
-                :goal="goal"
-                @update-progress="updateGoalProgress"
-            />
+              <GoalItem
+                  v-for="goal in goals"
+                  :key="goal.id"
+                  :goal="goal"
+                  @update-progress="updateGoalProgress"
+                  @delete-goal="deleteGoal"
+              />
         </div>
     </div>
 
@@ -64,7 +65,10 @@ export default {
       if (goal) {
         goal.completedHours += hours
       }
-    }
+    },
+    deleteGoal(goalId) {
+      this.goals = this.goals.filter(goal => goal.id !== goalId)
+    },
   }
 }
 </script>

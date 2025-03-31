@@ -2,6 +2,7 @@
   <div class="goal-item">
     <div class="goal-header">
       <h3>{{ goal.title }}</h3>
+        <img @click="showDeleteModal = true" class="delete-icon" src="../assets/images/trash-icon.png" alt="Удалить">
     </div>
 
     <div class="goal-info">
@@ -12,7 +13,6 @@
     <div class="progress-container">
       <div class="progress-bar" :style="{ width: progressPercentage + '%' }"></div>
       <span class="progress-text">{{ goal.completedHours.toFixed(1) }} / {{ goal.targetHours }} часов</span>
-
     </div>
 
     <div class="play-stop-button">
@@ -20,22 +20,33 @@
           @click="toggleTimer"
           :class="{ 'timer-button': true, 'active': goal.isTimerRunning }"
       >
-
-      <img
-          v-if="goal.isTimerRunning"
-          src="../assets/images/stop-button.png"
-          alt="stop"
-          class="stop-icon"
-      >
-      <img
-          v-else
-          src="../assets/images/play-button.png"
-          alt="play"
-      >    </button>
+        <img
+            v-if="goal.isTimerRunning"
+            src="../assets/images/stop-button.png"
+            alt="stop"
+            class="stop-icon"
+        >
+        <img
+            v-else
+            src="../assets/images/play-button.png"
+            alt="play"
+        >
+      </button>
     </div>
 
     <div v-if="goal.isTimerRunning" class="timer-display">
-    Время: {{ formattedElapsedTime }}
+      Время: {{ formattedElapsedTime }}
+    </div>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div v-if="showDeleteModal" class="modal-overlay" @click.self="showDeleteModal = false">
+      <div class="delete-modal">
+        <p>Точно хотите удалить?</p>
+        <div class="modal-actions">
+          <button class="white-button" @click="showDeleteModal = false">Нет</button>
+          <button class="underline-button" @click="confirmDelete">да</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -51,7 +62,8 @@ export default {
   data() {
     return {
       elapsedMinutes: 0,
-      timerInterval: null
+      timerInterval: null,
+      showDeleteModal: false
     }
   },
   computed: {
@@ -65,7 +77,7 @@ export default {
       const hours = Math.floor(this.elapsedMinutes / 60)
       const minutes = this.elapsedMinutes % 60
       return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
-    }
+    },
   },
   methods: {
     toggleTimer() {
@@ -79,15 +91,13 @@ export default {
       this.goal.isTimerRunning = true
       this.elapsedMinutes = 0
 
-      // Таймер для обновления progress
       this.progressTimer = setInterval(() => {
         this.$emit('update-progress', {
           id: this.goal.id,
-          hours: 1/60 // 1 минута в часах
+          hours: 1/60
         })
-      }, 60000) // Обновлять каждую минуту
+      }, 60000)
 
-      // Таймер для отображения времени
       this.timerInterval = setInterval(() => {
         this.elapsedMinutes++
       }, 60000)
@@ -96,6 +106,10 @@ export default {
       this.goal.isTimerRunning = false
       clearInterval(this.progressTimer)
       clearInterval(this.timerInterval)
+    },
+    confirmDelete() {
+      this.$emit('delete-goal', this.goal.id)
+      this.showDeleteModal = false
     }
   },
   beforeUnmount() {
@@ -132,6 +146,8 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-bottom: 32px;
+  position: relative;
+  align-items: center;
 }
 
 .goal-info {
@@ -170,5 +186,47 @@ export default {
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  background: transparent;
+}
+
+.delete-icon {
+  width: 24px;
+  height: 24px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+
+.delete-icon:hover {
+  opacity: 1;
+}
+
+/* Стили для модального окна удаления */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-modal {
+  background: #151515;
+  padding: 30px;
+  border-radius: 15px;
+  width: 230px;
+}
+
+.delete-modal p {
+  margin-bottom: 32px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
