@@ -1,8 +1,20 @@
 <template>
-  <div class="goal-item">
+  <div
+      class="goal-item"
+      :class="{ 'active': isCardActive || goal.isTimerRunning }"
+      @click="toggleCard"
+  >
     <div class="goal-header">
       <h3>{{ goal.title }}</h3>
-        <img @click="showDeleteModal = true" class="delete-icon" src="../assets/images/trash-icon.png" alt="Удалить">
+      <transition name="fade">
+        <img
+            v-if="isCardActive || goal.isTimerRunning"
+            @click.stop="showDeleteModal = true"
+            class="delete-icon"
+            src="../assets/images/trash-icon.png"
+            alt="Удалить"
+        >
+      </transition>
     </div>
 
     <div class="goal-info">
@@ -15,28 +27,36 @@
       <span class="progress-text">{{ goal.completedHours.toFixed(1) }} / {{ goal.targetHours }} часов</span>
     </div>
 
-    <div class="play-stop-button">
-      <button
-          @click="toggleTimer"
-          :class="{ 'timer-button': true, 'active': goal.isTimerRunning }"
+    <transition name="fade">
+      <div
+          v-if="isCardActive || goal.isTimerRunning"
+          class="play-stop-button"
+          @click.stop
       >
-        <img
-            v-if="goal.isTimerRunning"
-            src="../assets/images/stop-button.png"
-            alt="stop"
-            class="stop-icon"
+        <button
+            @click="toggleTimer"
+            :class="{ 'timer-button': true, 'active': goal.isTimerRunning }"
         >
-        <img
-            v-else
-            src="../assets/images/play-button.png"
-            alt="play"
-        >
-      </button>
-    </div>
+          <img
+              v-if="goal.isTimerRunning"
+              src="../assets/images/stop-button.png"
+              alt="stop"
+              class="stop-icon"
+          >
+          <img
+              v-else
+              src="../assets/images/play-button.png"
+              alt="play"
+          >
+        </button>
+      </div>
+    </transition>
 
-    <div v-if="goal.isTimerRunning" class="timer-display">
-      Время: {{ formattedElapsedTime }}
-    </div>
+    <transition name="slide">
+      <div v-if="goal.isTimerRunning" class="timer-display">
+        Время: {{ formattedElapsedTime }}
+      </div>
+    </transition>
 
     <!-- Модальное окно подтверждения удаления -->
     <div v-if="showDeleteModal" class="modal-overlay" @click.self="showDeleteModal = false">
@@ -63,7 +83,9 @@ export default {
     return {
       elapsedMinutes: 0,
       timerInterval: null,
-      showDeleteModal: false
+      showDeleteModal: false,
+      isCardActive: false,
+      autoHideTimeout: null
     }
   },
   computed: {
@@ -80,6 +102,11 @@ export default {
     },
   },
   methods: {
+    toggleCard() {
+      if (this.goal.isTimerRunning) return;
+
+      this.isCardActive = !this.isCardActive;
+    },
     toggleTimer() {
       if (!this.goal.isTimerRunning) {
         this.startTimer()
@@ -89,6 +116,7 @@ export default {
     },
     startTimer() {
       this.goal.isTimerRunning = true
+      this.isCardActive = true
       this.elapsedMinutes = 0
 
       this.progressTimer = setInterval(() => {
@@ -104,6 +132,7 @@ export default {
     },
     stopTimer() {
       this.goal.isTimerRunning = false
+      this.isCardActive = false
       clearInterval(this.progressTimer)
       clearInterval(this.timerInterval)
     },
@@ -118,6 +147,9 @@ export default {
     }
     if (this.progressTimer) {
       clearInterval(this.progressTimer)
+    }
+    if (this.autoHideTimeout) {
+      clearTimeout(this.autoHideTimeout);
     }
   }
 }
@@ -228,5 +260,22 @@ export default {
 .modal-actions {
   display: flex;
   justify-content: space-between;
+}
+
+/* Анимации */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.slide-enter-active, .slide-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-enter-from, .slide-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
 }
 </style>
