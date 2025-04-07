@@ -1,9 +1,11 @@
 <script setup>
 import MainScreen from './views/MainScreen.vue'
+import HeaderComp from "@/components/HeaderComp.vue";
 </script>
 
 <template>
-  <MainScreen />
+  <header-comp/>
+  <MainScreen/>
 </template>
 
 <style scoped>

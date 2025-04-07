@@ -1,6 +1,5 @@
 <template>
   <div class="app">
-    <HeaderComp/>
     <div class="cards-list">
         <div class="goals-list">
             <div class="card-add">
@@ -27,12 +26,11 @@
 </template>
 
 <script>
-import HeaderComp from '@/components/HeaderComp.vue'
 import GoalItem from '@/components/GoalItem.vue'
 import AddGoalModal from '@/components/AddGoalModal.vue'
 
 export default {
-  components: {HeaderComp, GoalItem, AddGoalModal },
+  components: {GoalItem, AddGoalModal },
   data() {
     return {
       showModal: false,

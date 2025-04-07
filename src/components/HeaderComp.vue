@@ -1,12 +1,11 @@
 <script setup>
-import mainScreen from "@/views/MainScreen.vue";
 </script>
 
 <template>
   <header>
     <nav>
-      <a @click="mainScreen">Цели</a>
-      <a href="">User</a>
+      <router-link to="/">Compiner</router-link>
+      <router-link to="/goals">Цели</router-link>
     </nav>
   </header>
 </template>
